@@ -9,21 +9,16 @@ $errorTypes = @(
 )
 $statusCodes = 'OK','WARN','ERR'
  
-# $logLines = @()
 $logLines = [System.Collections.Generic.List[psobject]]::new(50000)
 $rnd = [System.Random]::new()
  
 for ($i=0; $i -lt 50000; $i++) {
-    # $timestamp = (Get-Date).AddSeconds(-$i).ToString("yyyy-MM-dd HH:mm:ss")
-    # Using .NET DateTime directly
     $timestamp = [DateTime]::Now.AddSeconds(-$i).ToString("yyyy-MM-dd HH:mm:ss")
-    # $plc = Get-Random -InputObject $plcNames
     $plc = $plcNames[$rnd.Next(0, $plcNames.Count)]
     $operator = $rnd.Next(101,121)
     $batch = $rnd.Next( 1000,1101)
     $status = $statusCodes[$rnd.Next(0, $statusCodes.Count)]
     $machineTemp = [math]::Round(($rnd.Next(60,110)) + ($rnd.Next()),2)
-    # $machineTemp = [math]::Round((Get-Random -Minimum 60 -Maximum 110) + (Get-Random),2)
     $load = $rnd.Next(0, 101)
  
     if (($rnd.Next( 1, 8)) -eq 4) {
@@ -38,12 +33,9 @@ for ($i=0; $i -lt 50000; $i++) {
         $msg = "INFO; $timestamp; $plc; System running normally; ; $status; $operator; $batch; $machineTemp; $load"
     }
  
-    # $logLines += $msg
     $logLines.Add($msg)
 }
  
-# $null = Set-Content -Path $bigFileName -Value $logLines
 $null = [System.IO.File]::WriteAllLines($bigFileName, $logLines)
-# $null = Write-Output "PLC log file generated."
 $null = [Console]::WriteLine("PLC log file generated.")
 }
