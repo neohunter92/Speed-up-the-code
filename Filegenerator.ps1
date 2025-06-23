@@ -10,7 +10,7 @@ $errorTypes = @(
 $statusCodes = 'OK','WARN','ERR'
  
 # $logLines = @()
-$logLines = [System.Collections.Generic.List[psobject]]::new()
+$logLines = [System.Collections.Generic.List[psobject]]::new(50000)
 $rnd = [System.Random]::new()
  
 for ($i=0; $i -lt 50000; $i++) {
