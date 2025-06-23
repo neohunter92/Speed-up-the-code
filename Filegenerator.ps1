@@ -9,7 +9,8 @@ $errorTypes = @(
 )
 $statusCodes = 'OK','WARN','ERR'
  
-$logLines = @()
+# $logLines = @()
+$logLines = [System.Collections.Generic.List[psobject]]::new()
  
 for ($i=0; $i -lt 50000; $i++) {
     $timestamp = (Get-Date).AddSeconds(-$i).ToString("yyyy-MM-dd HH:mm:ss")
@@ -32,9 +33,10 @@ for ($i=0; $i -lt 50000; $i++) {
         $msg = "INFO; $timestamp; $plc; System running normally; ; $status; $operator; $batch; $machineTemp; $load"
     }
  
-    $logLines += $msg
+    # $logLines += $msg
+    $logLines.Add($msg)
 }
  
-Set-Content -Path $bigFileName -Value $logLines
+$null = Set-Content -Path $bigFileName -Value $logLines
 Write-Output "PLC log file generated."
 }
