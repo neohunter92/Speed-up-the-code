@@ -4,7 +4,7 @@ $plcNames = 'PLC_A','PLC_B','PLC_C','PLC_D'
 $errorTypes = 'Sandextrator overload', 'Conveyor misalignment', 'Valve stuck', 'Temperature warning'
 $statusCodes = 'OK','WARN','ERR'
  
-$logLines = [System.Collections.Generic.List[psobject]]::new(50000)
+$writer = [System.IO.StreamWriter]::new($bigFileName, $false)
 $rnd = [System.Random]::new()
  
 for ($i=0; $i -lt 50000; $i++) {
@@ -20,16 +20,17 @@ for ($i=0; $i -lt 50000; $i++) {
         $errorType =  $errorTypes[$rnd.Next(0, $errorTypes.Count)]
         if ($errorType -eq 'Sandextrator overload') {
             $value = $rnd.Next( 1 ,11)
-            $logLines.Add("ERROR; $timestamp; $plc; $errorType; $value; $status; $operator; $batch; $machineTemp; $load")
+            $writer.WriteLine("ERROR; $timestamp; $plc; $errorType; $value; $status; $operator; $batch; $machineTemp; $load")
         } else {
-            $logLines.Add("ERROR; $timestamp; $plc; $errorType; ; $status; $operator; $batch; $machineTemp; $load")
+            $writer.WriteLine("ERROR; $timestamp; $plc; $errorType; ; $status; $operator; $batch; $machineTemp; $load")
         }
     } else {
-        $logLines.Add("INFO; $timestamp; $plc; System running normally; ; $status; $operator; $batch; $machineTemp; $load")
+        $writer.WriteLine("INFO; $timestamp; $plc; System running normally; ; $status; $operator; $batch; $machineTemp; $load")
     }
  
 }
  
-$null = [System.IO.File]::WriteAllLines($bigFileName, $logLines)
+$writer.Close()
+$writer.Dispose()
 $null = [Console]::WriteLine("PLC log file generated.")
 }
