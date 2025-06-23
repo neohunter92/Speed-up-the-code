@@ -14,15 +14,15 @@ $logLines = [System.Collections.Generic.List[psobject]]::new()
  
 for ($i=0; $i -lt 50000; $i++) {
     $timestamp = (Get-Date).AddSeconds(-$i).ToString("yyyy-MM-dd HH:mm:ss")
-    $plc = $plcNames | Get-Random
+    $plc = Get-Random -InputObject $plcNames
     $operator = Get-Random -Minimum 101 -Maximum 121
     $batch = Get-Random -Minimum 1000 -Maximum 1101
-    $status = $statusCodes | Get-Random
+    $status = Get-Random -InputObject $statusCodes
     $machineTemp = [math]::Round((Get-Random -Minimum 60 -Maximum 110) + (Get-Random),2)
     $load = Get-Random -Minimum 0 -Maximum 101
  
     if ((Get-Random -Minimum 1 -Maximum 8) -eq 4) {
-        $errorType = $errorTypes | Get-Random
+        $errorType =  Get-Random -InputObject $errorTypes
         if ($errorType -eq 'Sandextrator overload') {
             $value = (Get-Random -Minimum 1 -Maximum 11)
             $msg = "ERROR; $timestamp; $plc; $errorType; $value; $status; $operator; $batch; $machineTemp; $load"
@@ -38,5 +38,5 @@ for ($i=0; $i -lt 50000; $i++) {
 }
  
 $null = Set-Content -Path $bigFileName -Value $logLines
-Write-Output "PLC log file generated."
+$null = Write-Output "PLC log file generated."
 }
