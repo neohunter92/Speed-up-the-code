@@ -11,6 +11,7 @@ $statusCodes = 'OK','WARN','ERR'
  
 # $logLines = @()
 $logLines = [System.Collections.Generic.List[psobject]]::new()
+$rnd = [System.Random]::new()
  
 for ($i=0; $i -lt 50000; $i++) {
     $timestamp = (Get-Date).AddSeconds(-$i).ToString("yyyy-MM-dd HH:mm:ss")
@@ -18,7 +19,8 @@ for ($i=0; $i -lt 50000; $i++) {
     $operator = Get-Random -Minimum 101 -Maximum 121
     $batch = Get-Random -Minimum 1000 -Maximum 1101
     $status = Get-Random -InputObject $statusCodes
-    $machineTemp = [math]::Round((Get-Random -Minimum 60 -Maximum 110) + (Get-Random),2)
+    $machineTemp = [math]::Round(($rnd.Next(60,110)) + ($rnd.Next()),2)
+    # $machineTemp = [math]::Round((Get-Random -Minimum 60 -Maximum 110) + (Get-Random),2)
     $load = Get-Random -Minimum 0 -Maximum 101
  
     if ((Get-Random -Minimum 1 -Maximum 8) -eq 4) {
