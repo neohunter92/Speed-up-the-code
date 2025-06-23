@@ -20,15 +20,14 @@ for ($i=0; $i -lt 50000; $i++) {
         $errorType =  $errorTypes[$rnd.Next(0, $errorTypes.Count)]
         if ($errorType -eq 'Sandextrator overload') {
             $value = $rnd.Next( 1 ,11)
-            $msg = "ERROR; $timestamp; $plc; $errorType; $value; $status; $operator; $batch; $machineTemp; $load"
+            $logLines.Add("ERROR; $timestamp; $plc; $errorType; $value; $status; $operator; $batch; $machineTemp; $load")
         } else {
-            $msg = "ERROR; $timestamp; $plc; $errorType; ; $status; $operator; $batch; $machineTemp; $load"
+            $logLines.Add("ERROR; $timestamp; $plc; $errorType; ; $status; $operator; $batch; $machineTemp; $load")
         }
     } else {
-        $msg = "INFO; $timestamp; $plc; System running normally; ; $status; $operator; $batch; $machineTemp; $load"
+        $logLines.Add("INFO; $timestamp; $plc; System running normally; ; $status; $operator; $batch; $machineTemp; $load")
     }
  
-    $logLines.Add($msg)
 }
  
 $null = [System.IO.File]::WriteAllLines($bigFileName, $logLines)
