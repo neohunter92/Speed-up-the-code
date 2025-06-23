@@ -15,18 +15,19 @@ $rnd = [System.Random]::new()
  
 for ($i=0; $i -lt 50000; $i++) {
     $timestamp = (Get-Date).AddSeconds(-$i).ToString("yyyy-MM-dd HH:mm:ss")
+    # $plc = Get-Random -InputObject $plcNames
     $plc = Get-Random -InputObject $plcNames
-    $operator = Get-Random -Minimum 101 -Maximum 121
-    $batch = Get-Random -Minimum 1000 -Maximum 1101
+    $operator = $rnd.Next(101,121)
+    $batch = $rnd.Next( 1000,1101)
     $status = Get-Random -InputObject $statusCodes
     $machineTemp = [math]::Round(($rnd.Next(60,110)) + ($rnd.Next()),2)
     # $machineTemp = [math]::Round((Get-Random -Minimum 60 -Maximum 110) + (Get-Random),2)
-    $load = Get-Random -Minimum 0 -Maximum 101
+    $load = $rnd.Next(0, 101)
  
-    if ((Get-Random -Minimum 1 -Maximum 8) -eq 4) {
+    if (($rnd.Next( 1, 8)) -eq 4) {
         $errorType =  Get-Random -InputObject $errorTypes
         if ($errorType -eq 'Sandextrator overload') {
-            $value = (Get-Random -Minimum 1 -Maximum 11)
+            $value = $rnd.Next( 1 ,11)
             $msg = "ERROR; $timestamp; $plc; $errorType; $value; $status; $operator; $batch; $machineTemp; $load"
         } else {
             $msg = "ERROR; $timestamp; $plc; $errorType; ; $status; $operator; $batch; $machineTemp; $load"
