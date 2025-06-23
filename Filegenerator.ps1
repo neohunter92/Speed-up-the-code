@@ -1,12 +1,7 @@
 Measure-Command{
 $bigFileName = "plc_log.txt"
 $plcNames = 'PLC_A','PLC_B','PLC_C','PLC_D'
-$errorTypes = @(
-    'Sandextrator overload',
-    'Conveyor misalignment',
-    'Valve stuck',
-    'Temperature warning'
-)
+$errorTypes = 'Sandextrator overload', 'Conveyor misalignment', 'Valve stuck', 'Temperature warning'
 $statusCodes = 'OK','WARN','ERR'
  
 $logLines = [System.Collections.Generic.List[psobject]]::new(50000)
