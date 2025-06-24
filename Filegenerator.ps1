@@ -16,15 +16,15 @@ Measure-Command {
         $machineTemp = [math]::Round(($rnd.Next(60,110)) + ($rnd.Next()),2)
         $load = $rnd.Next(0,101)
 
-        if (($rnd.Next(1,8)) -eq 4) {
+        (($rnd.Next(1,8)) -eq 4) ? {
             $errorType = $errorTypes[$rnd.Next(0, $errorTypes.Length)]
-            if ($errorType -eq 'Sandextrator overload') {
+            ($errorType -eq 'Sandextrator overload') ? {
                 $value = $rnd.Next(1,11);
                 $writer.WriteLine("ERROR; $timestamp; $plc; $errorType; $value; $status; $operator; $batch; $machineTemp; $load")
-            } else {
+            } : {
                 $writer.WriteLine("ERROR; $timestamp; $plc; $errorType; ; $status; $operator; $batch; $machineTemp; $load")
             }
-        } else {
+        } : {
             $writer.WriteLine("INFO; $timestamp; $plc; System running normally; ; $status; $operator; $batch; $machineTemp; $load")
         }
     }
