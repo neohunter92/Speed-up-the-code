@@ -4,12 +4,12 @@ Measure-Command {
     $errorTypes = 'Sandextrator overload', 'Conveyor misalignment', 'Valve stuck', 'Temperature warning'
     $statusCodes = 'OK','WARN','ERR'
 
-    # $TextToWrite = [System.Collections.Generic.List[string]]::new()
     $TextToWrite = [System.Collections.ArrayList]::new()
     $rnd = [System.Random]::new()
+    $baseTimestamp = [DateTime]::Now
 
     for ($i = 0; $i -lt 50000; $i++) {
-        $timestamp = [DateTime]::Now.AddSeconds(-$i).ToString('yyyy-MM-dd HH:mm:ss')
+        $timestamp = $baseTimestamp.AddSeconds(-$i).ToString('yyyy-MM-dd HH:mm:ss')
         $plc = $plcNames[$rnd.Next(0, $plcNames.Length)]
         $operator = $rnd.Next(101,121)
         $batch = $rnd.Next(1000,1101)
