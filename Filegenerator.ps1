@@ -4,7 +4,8 @@ Measure-Command {
     $errorTypes = 'Sandextrator overload', 'Conveyor misalignment', 'Valve stuck', 'Temperature warning'
     $statusCodes = 'OK','WARN','ERR'
 
-    $TextToWrite = [System.Collections.Generic.List[string]]::new()
+    # $TextToWrite = [System.Collections.Generic.List[string]]::new()
+    $TextToWrite = [System.Collections.ArrayList]::new()
     $rnd = [System.Random]::new()
 
     for ($i = 0; $i -lt 50000; $i++) {
@@ -20,14 +21,14 @@ Measure-Command {
             $errorType = $errorTypes[$rnd.Next(0, $errorTypes.Length)]
             ($errorType -eq 'Sandextrator overload') ? $(
                 $value = $rnd.Next(1,11);
-                $TextToWrite.Add("ERROR; $timestamp; $plc; $errorType; $value; $status; $operator; $batch; $machineTemp; $load`n")
+                $null = $TextToWrite.Add("ERROR; $timestamp; $plc; $errorType; $value; $status; $operator; $batch; $machineTemp; $load")
          ) : $(
-                $TextToWrite.Add("ERROR; $timestamp; $plc; $errorType; ; $status; $operator; $batch; $machineTemp; $load`n")
+                $null = $TextToWrite.Add("ERROR; $timestamp; $plc; $errorType; ; $status; $operator; $batch; $machineTemp; $load")
          )
         ) : $(
-            $TextToWrite.Add("INFO; $timestamp; $plc; System running normally; ; $status; $operator; $batch; $machineTemp; $load`n")
+            $null = $TextToWrite.Add("INFO; $timestamp; $plc; System running normally; ; $status; $operator; $batch; $machineTemp; $load")
         )
     }
-    [System.IO.File]::WriteAllText($bigFileName, $TextToWrite)
+    [System.IO.File]::WriteAllLines($bigFileName, $TextToWrite)
     [Console]::WriteLine('PLC log file generated.')
 }
