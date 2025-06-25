@@ -4,7 +4,7 @@ Measure-Command {
     $errorTypes = 'Sandextrator overload', 'Conveyor misalignment', 'Valve stuck', 'Temperature warning'
     $statusCodes = 'OK','WARN','ERR'
 
-    $writer = [System.IO.StreamWriter]::new($bigFileName, $false)
+    $TextToWrite = [System.Collections.Generic.List[string]]::new()
     $rnd = [System.Random]::new()
 
     for ($i = 0; $i -lt 50000; $i++) {
@@ -16,17 +16,18 @@ Measure-Command {
         $machineTemp = [math]::Round(($rnd.Next(60,110)) + ($rnd.Next()),2)
         $load = $rnd.Next(0,101)
 
-        (($rnd.Next(1,8)) -eq 4) ? {
+        (($rnd.Next(1,8)) -eq 4) ? $(
             $errorType = $errorTypes[$rnd.Next(0, $errorTypes.Length)]
-            ($errorType -eq 'Sandextrator overload') ? {
+            ($errorType -eq 'Sandextrator overload') ? $(
                 $value = $rnd.Next(1,11);
-                $writer.WriteLine("ERROR; $timestamp; $plc; $errorType; $value; $status; $operator; $batch; $machineTemp; $load")
-            } : {
-                $writer.WriteLine("ERROR; $timestamp; $plc; $errorType; ; $status; $operator; $batch; $machineTemp; $load")
-            }
-        } : {
-            $writer.WriteLine("INFO; $timestamp; $plc; System running normally; ; $status; $operator; $batch; $machineTemp; $load")
-        }
+                $TextToWrite.Add("ERROR; $timestamp; $plc; $errorType; $value; $status; $operator; $batch; $machineTemp; $load`n")
+         ) : $(
+                $TextToWrite.Add("ERROR; $timestamp; $plc; $errorType; ; $status; $operator; $batch; $machineTemp; $load`n")
+         )
+        ) : $(
+            $TextToWrite.Add("INFO; $timestamp; $plc; System running normally; ; $status; $operator; $batch; $machineTemp; $load`n")
+        )
     }
-    $writer.Close();$writer.Dispose();[Console]::WriteLine('PLC log file generated.')
+    [System.IO.File]::WriteAllText($bigFileName, $TextToWrite)
+    [Console]::WriteLine('PLC log file generated.')
 }
